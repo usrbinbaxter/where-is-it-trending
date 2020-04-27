@@ -29,7 +29,7 @@ def main():
     for tup in trending_countries:
         print(tup[0], ":", tup[1])
 
-    print("\033[1m", "Highest Position: ", "\033[0m", min(trending_countries)[1])
+    print("\033[1m", "Highest Position: ", "\033[0m", min(trending_countries, key=lambda x:x[1])[1])
 
 
 
