@@ -15,6 +15,11 @@ def main():
     for c in country_codes:
         results_dict = get_trending("&", countries.get(c)[1])
         video_ids = []
+
+        if 'items' not in results_dict:
+            print("Could not fetch trending videos list for ", c)
+            sys.exit(1)
+
         for x in range(len(results_dict['items'])):
             video_ids.append(results_dict['items'][x]['id'])
         if video_id in video_ids:
@@ -25,6 +30,10 @@ def main():
         i = i + 1
     
     print()
+
+    if len(trending_countries) == 0:
+        print("Not trending anywhere.")
+        sys.exit(0)
 
     for tup in trending_countries:
         print(tup[0], ":", tup[1])
@@ -38,7 +47,11 @@ def get_trending(page_token, country_code):
     request = session.get(url)
 
     if request.status_code == 429:
-        print("Uh oh! You have been rate limited!")
+        print("\nUh oh! It looks like you have been rate limited!")
+        sys.exit(1)
+
+    if request.status_code == 403:
+        print("\nYou have exceeded the daily quota for your API key.")
         sys.exit(1)
 
     return request.json()
